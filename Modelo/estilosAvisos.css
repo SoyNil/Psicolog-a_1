@@ -1,0 +1,347 @@
+/* Estilos generales */
+#avisos-container {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--glass-bg-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--border-color);
+    max-width: 800px;
+}
+
+/* Estilo para cada aviso */
+.aviso {
+    background-color: var(--glass-bg-color);
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+.aviso:hover {
+    background-color: var(--lead);
+}
+
+/* Nombre de usuario y fecha */
+.aviso strong {
+    font-family: 'Alkatra', cursive;
+    font-size: 18px;
+    color: var(--text-white);
+}
+
+.aviso em {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    color: var(--text-light-gray);
+}
+
+/* Texto del aviso */
+.aviso p {
+    font-size: 16px;
+    color: var(--text-light-gray);
+    line-height: 1.5;
+}
+/* Estilo para el botón de agregar aviso */
+.add-notice-btn {
+    background-color: var(--green);
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: var(--text-white);
+    font-family: 'Rajdhani', sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-notice-btn:hover {
+    background-color: var(--blue);
+}
+
+/* Estilo para el formulario emergente */
+#addNoticeForm {
+    background-color: var(--glass-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px var(--border-color);
+    max-width: 600px;
+    margin: 50px auto;
+    display: none; /* Inicialmente oculto */
+    z-index: 10;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#addNoticeForm.show {
+    display: block;
+    opacity: 1;
+}
+
+#addNoticeForm textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: var(--text-light-gray);
+    background-color: var(--glass-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin-bottom: 15px;
+    resize: none;
+    height: 150px;
+}
+
+#addNoticeForm button {
+    background-color: var(--green);
+    color: var(--text-white);
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'Rajdhani', sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#addNoticeForm button:hover {
+    background-color: var(--blue);
+}
+
+/* Estilo de fondo difuso */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 5;
+}
+
+/* Estilo para el botón dentro del formulario */
+#addNoticeForm button {
+    background-color: #4CAF50; /* Verde para mantener la coherencia de diseño */
+    color: white;
+    font-size: 16px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#addNoticeForm button:hover {
+    background-color: #45a049; /* Un tono más oscuro de verde */
+}
+/* Modal de Agregar Aviso */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+    display: none; /* Inicialmente oculto */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que el modal se muestre encima de todo */
+    overflow: hidden;
+}
+
+/* Contenedor del contenido del modal */
+.modal-content {
+    background-color: var(--glass-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo para el botón de cerrar */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: var(--text-white);
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+/* Título del modal */
+.modal-content h2 {
+    color: var(--text-white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+/* Estilo para el textarea */
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    background-color: var(--body-bg-color);
+    color: var(--text-white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1em;
+    margin-bottom: 20px;
+    resize: none;
+    transition: border-color 0.3s ease;
+}
+
+/* Efecto en el textarea al enfocar */
+textarea:focus {
+    border-color: var(--green);
+}
+
+/* Estilo para el botón de agregar aviso */
+.submit-btn {
+    background-color: var(--green);
+    color: var(--text-white);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Efecto cuando el botón es hover */
+.submit-btn:hover {
+    background-color: var(--blue);
+}
+
+/* Estilo para el fondo difuso de la página */
+body::after,
+body::before {
+    content: '';
+    position: fixed;
+    height: 400px;
+    width: 400px;
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(150px);
+    opacity: 0.5;
+}
+
+/* Fondo difuso de color azul */
+body::before {
+    background-color: var(--blue);
+    left: 0;
+    bottom: 0;
+    transform: translate(-50%);
+}
+
+/* Fondo difuso de color violeta */
+body::after {
+    background-color: var(--violet);
+    right: 0;
+    top: 0;
+    transform: translate(50%);
+}
+/* Estilo para el botón de agregar aviso (submit-btn-1) */
+.submit-btn-1 {
+    background-color: var(--green); /* Color de fondo verde */
+    color: var(--text-white); /* Texto en blanco */
+    padding: 10px 20px; /* Espaciado interno */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1.1em; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor a mano al pasar el ratón */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Efecto de transición */
+}
+
+/* Efecto de hover sobre el botón */
+.submit-btn-1:hover {
+    background-color: var(--blue); /* Cambia el color de fondo a azul */
+    transform: scale(1.05); /* Hace que el botón crezca un poco */
+}
+
+/* Efecto de presionar el botón */
+.submit-btn-1:active {
+    transform: scale(0.98); /* Reduce el tamaño cuando se hace clic */
+}
+/* Contenedor del botón de agregar aviso */
+.add-notice-container {
+    text-align: center; /* Centra el botón */
+    margin: 20px auto; /* Margen superior e inferior */
+    max-width: 800px; /* Alineado con el ancho máximo del contenedor de avisos */
+}
+
+/* Estilo para el botón de agregar aviso */
+.add-notice-btn {
+    display: block;
+    background-color: var(--green);
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: var(--text-white);
+    font-family: 'Rajdhani', sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0 auto 15px; /* Centrado horizontal con margen inferior */
+    text-align: center;
+}
+
+.add-notice-btn:hover {
+    background-color: var(--blue);
+}
+/* Estilos para los modales */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--glass-bg-color);
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    max-width: 500px;
+    box-shadow: 0 4px 10px var(--border-color);
+}
+
+.close-btn {
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-light-gray);
+}
+
+.close-btn:hover {
+    color: var(--green);
+}
+
+.submit-btn {
+    background-color: var(--blue);
+    color: var(--text-white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 15px auto 0;
+}
+
+.submit-btn:hover {
+    background-color: var(--green);
+}
