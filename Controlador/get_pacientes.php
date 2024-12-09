@@ -21,15 +21,15 @@ try {
         // Si es administrador, obtiene todos los pacientes
         if ($range == 'week') {
             $dateLimit = date('Y-m-d', strtotime('-7 days'));
-            $query = "SELECT * FROM pacientes WHERE fecha >= :dateLimit";
+            $query = "SELECT * FROM pacientes WHERE fecha_actual >= :dateLimit";
         } elseif ($range == 'month') {
             $dateLimit = date('Y-m-d', strtotime('-1 month'));
-            $query = "SELECT * FROM pacientes WHERE fecha >= :dateLimit";
+            $query = "SELECT * FROM pacientes WHERE fecha_actual >= :dateLimit";
         } elseif ($range == 'year') {
             $dateLimit = date('Y-m-d', strtotime('-1 year'));
-            $query = "SELECT * FROM pacientes WHERE fecha >= :dateLimit";
+            $query = "SELECT * FROM pacientes WHERE fecha_actual >= :dateLimit";
         } elseif ($startDate && $endDate) {
-            $query = "SELECT * FROM pacientes WHERE fecha BETWEEN :start_date AND :end_date";
+            $query = "SELECT * FROM pacientes WHERE fecha_actual BETWEEN :start_date AND :end_date";
         } else {
             $query = "SELECT * FROM pacientes";
         }
@@ -37,15 +37,15 @@ try {
         // Si no es administrador, solo obtiene los pacientes vinculados a su ID
         if ($range == 'week') {
             $dateLimit = date('Y-m-d', strtotime('-7 days'));
-            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha >= :dateLimit";
+            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha_actual >= :dateLimit";
         } elseif ($range == 'month') {
             $dateLimit = date('Y-m-d', strtotime('-1 month'));
-            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha >= :dateLimit";
+            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha_actual >= :dateLimit";
         } elseif ($range == 'year') {
             $dateLimit = date('Y-m-d', strtotime('-1 year'));
-            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha >= :dateLimit";
+            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha_actual >= :dateLimit";
         } elseif ($startDate && $endDate) {
-            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha BETWEEN :start_date AND :end_date";
+            $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id AND fecha_actual BETWEEN :start_date AND :end_date";
         } else {
             $query = "SELECT * FROM pacientes WHERE Usuario_ID = :usuario_id";
         }

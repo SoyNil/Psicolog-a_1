@@ -310,11 +310,21 @@ input {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     overflow-y: auto; /* Añade scroll si el contenido excede el tamaño del contenedor */
 }
+
 .patient-info div {
     margin-bottom: 5px; /* Espacio entre líneas */
     font-size: 14px; /* Ajusta el tamaño de la fuente si es necesario */
     color: var(--text-light-gray); /* O utiliza el color que prefieras */
     font-family: 'Rajdhani', sans-serif;
+}
+
+.patient-list-container {
+    max-height: 400px; /* Altura máxima de la caja */
+    overflow-y: auto; /* Habilita el scroll vertical */
+    padding: 10px;
+    border: 1px solid var(--border-color); /* Agrega un borde opcional */
+    border-radius: 8px; /* Bordes redondeados para el contenedor */
+    background-color: var(--body-bg-color); /* Fondo del contenedor */
 }
 
 .patient-item {
@@ -705,6 +715,54 @@ canvas {
     color: var(--text-white);
     cursor: pointer;
 }
+/* Estilo para el select add */
+#add_usuario {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-light-gray);
+    background-color: var(--glass-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Efecto hover y focus */
+#add_usuario:hover,
+#add_usuario:focus {
+    background-color: var(--body-bg-color);
+    border-color: var(--violet);
+    color: var(--text-white);
+    cursor: pointer;
+}
+/* Estilo para el select search */
+#psicologoSelector {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-light-gray);
+    background-color: var(--glass-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Efecto hover y focus */
+#psicologoSelector:hover,
+#psicologoSelector:focus {
+    background-color: var(--body-bg-color);
+    border-color: var(--violet);
+    color: var(--text-white);
+    cursor: pointer;
+}
 /* Contenedor para el input y el botón */
 .password-container {
     position: relative;
@@ -748,4 +806,3 @@ canvas {
 #dateFiltersSection {
     margin-bottom: 30px; /* Espacio entre filtros de fecha y los botones de agregar */
 }
- 

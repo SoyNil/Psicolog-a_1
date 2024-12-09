@@ -78,58 +78,66 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <main class="main-container">
         <div class="left-container">
             <h3>Mis Pacientes</h3>
+            <?php if ($ocupacion_actual == 1): ?>
             <div class="button-container">
                 <button class="add-btn" onclick="openAddModal()">Agregar Paciente</button>
+                <!-- Selector de psicólogos -->
+            <select id="psicologoSelector" onchange="filterByPsychologist()">
+                <option value="">Seleccione un psicólogo</option>
+            </select>
             </div>
+            <?php endif; ?>
             <!-- Cuadro de búsqueda -->
             <input type="text" id="searchInput" class="search-box" placeholder="Buscar paciente por nombre o DNI..." oninput="filterPatients()">
-            
-            <ul class="patient-list" id="patientList">
-                <?php if (empty($pacientes)): ?>
-                    <li class="no-patients">No hay usuarios registrados</li>
-                <?php else: ?>
-                    <?php foreach ($pacientes as $paciente): ?>
-                        <li class="patient-item">
-                        <div class="patient-info">
-                            <div><strong><?php echo htmlspecialchars($paciente['Nombre']); ?></strong></div>
-                            <div>DNI: <?php echo htmlspecialchars($paciente['DNI']); ?></div>
-                            <div>Fecha creada: <?php echo htmlspecialchars($paciente['fecha_actual']); ?></div>
-                            <div>Fecha de la cita: <?php echo htmlspecialchars($paciente['Fecha']); ?></div>
-                            <div>Precio: S/.<?php echo htmlspecialchars($paciente['Precio']); ?></div>
-                            <div>Ganancia: S/.<?php echo htmlspecialchars($paciente['Precio_Descuento']); ?></div>
-                            <?php if ($ocupacion_actual == 1): ?>
-                                <div><strong>Psicólogo:</strong> <?php echo htmlspecialchars($paciente['NombreUsuario']); ?></div>
-                            <?php endif; ?>
-                        </div>
-                            
-                        <div class="switch-container">
-                            <div class="switch-wrapper">
-                                <label for="atendio-<?php echo $paciente['ID']; ?>">¿Atendió al paciente?</label>
-                                <label class="switch">
-                                    <input type="checkbox" id="atendio-<?php echo $paciente['ID']; ?>" 
-                                        onchange="handleAtendido(<?php echo $paciente['ID']; ?>, this.checked)"
-                                        <?php echo $paciente['Atendido'] ? 'checked' : ''; ?>>
-                                    <span class="slider green-red"></span>
-                                </label>
+            <div class="patient-list-container">
+                <ul class="patient-list" id="patientList">
+                    <?php if (empty($pacientes)): ?>
+                        <li class="no-patients">No hay usuarios registrados</li>
+                    <?php else: ?>
+                        <?php foreach ($pacientes as $paciente): ?>
+                            <li class="patient-item">
+                            <div class="patient-info">
+                                <div><strong><?php echo htmlspecialchars($paciente['Nombre']); ?></strong></div>
+                                <div>DNI: <?php echo htmlspecialchars($paciente['DNI']); ?></div>
+                                <div>Fecha creada: <?php echo htmlspecialchars($paciente['fecha_actual']); ?></div>
+                                <div>Fecha de la cita: <?php echo htmlspecialchars($paciente['Fecha']); ?></div>
+                                <div>Precio: S/.<?php echo htmlspecialchars($paciente['Precio']); ?></div>
+                                <div>Porcentaje: <?php echo htmlspecialchars($paciente['Descuento']); ?> %</div>
+                                <div>Ganancia: S/.<?php echo htmlspecialchars($paciente['Precio_Descuento']); ?></div>
+                                <?php if ($ocupacion_actual == 1): ?>
+                                    <div><strong>Psicólogo:</strong> <?php echo htmlspecialchars($paciente['NombreUsuario']); ?></div>
+                                <?php endif; ?>
                             </div>
-                            <div class="switch-wrapper">
-                                <label for="hhcc-<?php echo $paciente['ID']; ?>">Historial Clínico</label>
-                                <label class="switch">
-                                    <input type="checkbox" id="hhcc-<?php echo $paciente['ID']; ?>" 
-                                        onchange="handleHHCC(<?php echo $paciente['ID']; ?>, this.checked)"
-                                        <?php echo $paciente['Historial_Clinico'] ? 'checked' : ''; ?>>
-                                    <span class="slider green-red"></span>
-                                </label>
+                                
+                            <div class="switch-container">
+                                <div class="switch-wrapper">
+                                    <label for="atendio-<?php echo $paciente['ID']; ?>">¿Atendió al paciente?</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="atendio-<?php echo $paciente['ID']; ?>" 
+                                            onchange="handleAtendido(<?php echo $paciente['ID']; ?>, this.checked)"
+                                            <?php echo $paciente['Atendido'] ? 'checked' : ''; ?>>
+                                        <span class="slider green-red"></span>
+                                    </label>
+                                </div>
+                                <div class="switch-wrapper">
+                                    <label for="hhcc-<?php echo $paciente['ID']; ?>">Historial Clínico</label>
+                                    <label class="switch">
+                                        <input type="checkbox" id="hhcc-<?php echo $paciente['ID']; ?>" 
+                                            onchange="handleHHCC(<?php echo $paciente['ID']; ?>, this.checked)"
+                                            <?php echo $paciente['Historial_Clinico'] ? 'checked' : ''; ?>>
+                                        <span class="slider green-red"></span>
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="button-container">
-                            <button class="edit-btn" onclick="openEditModal(<?php echo htmlspecialchars(json_encode($paciente)); ?>)">Editar</button>
-                            <button class="delete-btn" onclick="deletePaciente(<?php echo $paciente['ID']; ?>)">Eliminar</button>
-                        </div>
-                        </li>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </ul>
+                            <div class="button-container">
+                                <button class="edit-btn" onclick="openEditModal(<?php echo htmlspecialchars(json_encode($paciente)); ?>)">Editar</button>
+                                <button class="delete-btn" onclick="deletePaciente(<?php echo $paciente['ID']; ?>)">Eliminar</button>
+                            </div>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </ul>
+            </div>
         </div>
         
     <!-- Diagrama Pastel -->
@@ -151,7 +159,7 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <!-- Contenedor de los filtros de fecha -->
     <div id="dateFiltersSection">
         <div id="filterButtons">
-            <h2>Seleccione un filtro de fechas</h2>
+            <h2>¿Hace cuanto agendó al paciente?</h2>
             <button id="filterWeek">Últimos 7 días</button>
             <button id="filterMonth">Últimos 30 días</button>
             <button id="filterYear">Últimos 365 días</button>
@@ -198,12 +206,19 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="text" name="dni" id="add_dni" required>
                 <label for="add_nombre">Nombre:</label>
                 <input type="text" name="nombre" id="add_nombre" required>
-                <label for="add_fecha">Fecha:</label>
+                <label for="add_fecha">Fecha de la cita:</label>
                 <input type="date" name="fecha" id="add_fecha" required>
                 <label for="add_precio">Precio:</label>
                 <input type="number" name="precio" id="add_precio" step="0.01" min="0" oninput="validateDecimals(this)" required>
                 <label for="descuento">Porcentaje de ganancia (%):</label>
                 <input type="number" name="descuento" id="descuento" step="0.01" min="0" oninput="validateDecimals(this)" value="60" required>
+                
+                <!-- Nuevo campo para seleccionar el psicólogo -->
+                <label for="add_usuario">Psicólogo:</label>
+                <select name="usuario" id="add_usuario">
+                    <!-- Este campo se llenará dinámicamente -->
+                </select>
+
                 <button type="button" class="submit-btn" onclick="submitAddForm()">Guardar</button>
             </form>
         </div>
@@ -271,6 +286,72 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <script>
+        // Función para cargar los psicólogos y llenar el selector
+        function loadPsychologists() {
+            // Realizamos una solicitud para obtener la lista de psicólogos
+            fetch('../Controlador/obtener_usuarios.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error("Error al cargar los psicólogos:", data.error);
+                        return;
+                    }
+
+                    const psicologoSelector = document.getElementById('psicologoSelector'); // Selector donde se llenarán los psicólogos
+                    psicologoSelector.innerHTML = '<option value="">Seleccione un psicólogo</option>'; // Limpiar el selector antes de llenarlo
+
+                    // Llenar el selector con los psicólogos obtenidos
+                    data.forEach(psicologo => {
+                        const option = document.createElement('option');
+                        option.value = psicologo.ID; // ID del psicólogo
+                        option.textContent = psicologo.Usuario; // Nombre del psicólogo
+                        psicologoSelector.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al obtener los psicólogos:", error);
+                });
+        }
+
+        // Inicializamos la variable de pacientes de forma global
+        let pacientes = []; 
+
+        // Cargar los pacientes y luego pasar la lista al gráfico
+        function loadPacientes() {
+            fetch('../Controlador/get_pacientes.php')
+                .then(response => response.json())
+                .then(data => {
+                    pacientes = data; // Guardamos los datos de los pacientes en la variable global
+                    renderDonutChart(pacientes); // Renderizamos el gráfico inicial
+                })
+                .catch(error => {
+                    console.error("Error al cargar pacientes:", error);
+                });
+        }
+
+        // Función para filtrar pacientes según el psicólogo seleccionado
+        function filterByPsychologist() {
+            const psicologoId = document.getElementById('psicologoSelector').value; // Obtener el ID del psicólogo seleccionado
+            
+            if (!psicologoId) {
+                // Si no se ha seleccionado un psicólogo, mostramos todos los pacientes
+                renderDonutChart(pacientes); // Renderizamos el gráfico con todos los pacientes
+                return;
+            }
+
+            // Filtrar los pacientes según el psicólogo seleccionado
+            const pacientesFiltrados = pacientes.filter(paciente => paciente.Usuario_ID == psicologoId);
+
+            // Renderizar el gráfico con los pacientes filtrados
+            renderDonutChart(pacientesFiltrados);
+        }
+
+        // Llamamos a la función para cargar pacientes cuando se carga la página
+        document.addEventListener("DOMContentLoaded", function () {
+            loadPacientes();  // Cargar pacientes al iniciar
+            loadPsychologists();  // Cargar psicólogos en el selector
+        });
+
         // Función para aplicar el filtro por fechas personalizadas
         function applyCustomDateFilter() {
             const startDate = document.getElementById('startDate').value;
@@ -346,10 +427,29 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 })
         }
 
-        // Abrir y cerrar modales
         function openAddModal() {
+            // Limpiar el formulario antes de mostrar el modal
+            document.getElementById('addForm').reset();
+
+            // Llenar el select con los psicólogos
+            const usuarioField = document.getElementById('add_usuario');
+            fetch('../Controlador/obtener_usuarios.php')
+                .then(response => response.json())
+                .then(data => {
+                    usuarioField.innerHTML = ''; // Limpiar opciones previas
+                    data.forEach(usuario => {
+                        const option = document.createElement('option');
+                        option.value = usuario.ID;
+                        option.textContent = usuario.Usuario;
+                        usuarioField.appendChild(option); // Agregar opción al select
+                    });
+                })
+                .catch(error => console.error("Error al cargar usuarios:", error));
+
+            // Mostrar el modal
             document.getElementById('addModal').style.display = 'block';
         }
+
         function closeAddModal() {
             document.getElementById('addModal').style.display = 'none';
         }
@@ -433,14 +533,23 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (confirm('¿Estás seguro de eliminar este paciente?')) {
                 fetch('../Controlador/delete_paciente.php', {
                     method: 'POST',
-                    body: JSON.stringify({ id }),
-                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id }), // Enviar el ID como JSON
+                    headers: { 'Content-Type': 'application/json' }
                 })
-                .then(response => response.json()) // Convertir la respuesta JSON
+                .then(response => {
+                    return response.text(); // Leer la respuesta como texto
+                })
                 .then(data => {
-                    alert(data.message); // Mostrar solo el mensaje
-                    if (data.success) {
-                        location.reload(); // Recargar la página si tuvo éxito
+                    console.log(data); // Imprimir la respuesta completa para ver qué contiene
+                    try {
+                        const jsonData = JSON.parse(data); // Intentar analizarla como JSON
+                        alert(jsonData.message); // Mostrar el mensaje de respuesta
+                        if (jsonData.success) {
+                            location.reload(); // Recargar la página si fue exitoso
+                        }
+                    } catch (error) {
+                        console.error('Error al analizar la respuesta:', error);
+                        alert('Hubo un error al eliminar el paciente.');
                     }
                 })
                 .catch(error => {
@@ -542,64 +651,67 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         // Función para renderizar el gráfico de donut
-        function renderDonutChart(pacientes) {
-            // Calcular suma total de precios con descuento
-            const totalValue = pacientes.reduce((sum, paciente) => sum + parseFloat(paciente.Precio_Descuento || 0), 0);
-            document.getElementById('totalValue').textContent = `S/. ${totalValue.toFixed(2)}`;
+function renderDonutChart(pacientes) {
+    // Calcular suma total de precios con descuento solo si "Atendido" es igual a 1
+    const totalValue = pacientes
+        .filter(paciente => paciente.Atendido === 1) // Filtrar pacientes atendidos
+        .reduce((sum, paciente) => sum + parseFloat(paciente.Precio_Descuento || 0), 0);
 
-            // Crear los datos para el gráfico a partir de los pacientes
-            const data = {
-                labels: pacientes.map(p => p.Nombre), // Nombres de los pacientes
-                datasets: [{
-                    data: pacientes.map(p => p.Precio_Descuento || 0), // Precios de los pacientes
-                    backgroundColor: pacientes.map(p => getPieColor(p)), // Colores para cada segmento
-                    hoverOffset: 4
-                }]
-            };
+    document.getElementById('totalValue').textContent = `S/. ${totalValue.toFixed(2)}`;
 
-            // Definir la configuración para el gráfico
-            const config = {
-                type: 'pie',  // Usamos 'pie' porque 'donut' es un tipo de pie
-                data: data,
-                options: {
-                    cutout: '60%',  // Esto crea el efecto donut, ajusta el tamaño del agujero
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    const rawValue = Number(context.raw) || 0;
-                                    return `${context.label}: S/. ${rawValue.toFixed(2)}`; // Formato del valor
-                                }
-                            }
-                        },
-                        legend: {
-                            display: false // Ocultamos la leyenda predeterminada
+    // Crear los datos para el gráfico a partir de los pacientes
+    const data = {
+        labels: pacientes.map(p => p.Nombre), // Nombres de los pacientes
+        datasets: [{
+            data: pacientes.map(p => p.Precio_Descuento || 0), // Precios de los pacientes
+            backgroundColor: pacientes.map(p => getPieColor(p)), // Colores para cada segmento
+            hoverOffset: 4
+        }]
+    };
+
+    // Definir la configuración para el gráfico
+    const config = {
+        type: 'pie', // Usamos 'pie' porque 'donut' es un tipo de pie
+        data: data,
+        options: {
+            cutout: '60%', // Esto crea el efecto donut, ajusta el tamaño del agujero
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const rawValue = Number(context.raw) || 0;
+                            return `${context.label}: S/. ${rawValue.toFixed(2)}`; // Formato del valor
                         }
-                    },
-                    responsive: true,
-                    maintainAspectRatio: false
+                    }
+                },
+                legend: {
+                    display: false // Ocultamos la leyenda predeterminada
                 }
-            };
-
-            // Verificar que el canvas está presente en el DOM antes de crear el gráfico
-            const canvas = document.getElementById('pieChart');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-
-                // Verificar si el gráfico ya existe y destruirlo antes de crear uno nuevo
-                if (window.myPieChart) {
-                    window.myPieChart.destroy();
-                }
-
-                // Crear o actualizar el gráfico con la configuración
-                window.myPieChart = new Chart(ctx, config);
-
-                // Llamar a la función para renderizar la leyenda personalizada
-                renderCustomLegend(window.myPieChart);
-            } else {
-                console.error("El elemento con id 'pieChart' no está presente en el DOM.");
-            }
+            },
+            responsive: true,
+            maintainAspectRatio: false
         }
+    };
+
+    // Verificar que el canvas está presente en el DOM antes de crear el gráfico
+    const canvas = document.getElementById('pieChart');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+
+        // Destruir el gráfico existente antes de crear uno nuevo
+        if (window.myPieChart) {
+            window.myPieChart.destroy();
+        }
+
+        // Crear o actualizar el gráfico con la configuración
+        window.myPieChart = new Chart(ctx, config);
+
+        // Llamar a la función para renderizar la leyenda personalizada
+        renderCustomLegend(window.myPieChart);
+    } else {
+        console.error("El elemento con id 'pieChart' no está presente en el DOM.");
+    }
+}
 
         // Función para renderizar la leyenda personalizada
         function renderCustomLegend(chart) {

@@ -11,18 +11,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fecha = $_POST['fecha'] ?? null;
         $precio = $_POST['precio'] ?? null;
         $descuento = $_POST['descuento'] ?? 0; // Si no se envía, se establece en 0 por defecto
+        $usuario_id = $_POST['usuario'] ?? null; // ID del psicólogo seleccionado
 
-        // Obtener el ID del usuario actual desde la sesión
-        session_start();
-        if (!isset($_SESSION['ID'])) {
-            echo "Error: Usuario no identificado.";
+        // Validar que el psicólogo fue seleccionado
+        if (!$usuario_id) {
+            echo "Error: Debes seleccionar un psicólogo.";
             exit;
         }
-        $usuario_id = $_SESSION['ID'];
 
         // Validar los datos
         if (!$dni || !$nombre || !$fecha || !$precio) {
-            echo "Por favor, complete todos los campos.";
+            echo "Error: Por favor, complete todos los campos.";
             exit;
         }
 
@@ -50,6 +49,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Error al agregar el paciente: " . $e->getMessage();
     }
 } else {
-    echo "Método no permitido.";
+    echo "Error: Método no permitido.";
 }
-?>
