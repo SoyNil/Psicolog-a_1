@@ -41,8 +41,7 @@
                     </div>
                 </div>
                 <input class="btn" type="submit" value="Registrarse"><br><br>
-                <p><label>¿Ya tienes una cuenta? Inicie sesión aquí</label></p>
-                    <a href="index.php"><input class="btn" type="button" value="Iniciar Sesión"></a><br><br>   
+                <a href="principal.php"><input class="btn" type="button" value="Volver al menú principal"></a><br><br>   
             </form><div id="mostrar_mensaje"></div>
             <div id="mostrar_mensaje_1"></div>
         </div>
@@ -50,7 +49,15 @@
 </section>
 
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../PHPMailer/src/Exception.php';
+require '../PHPMailer/src/PHPMailer.php';
+require '../PHPMailer/src/SMTP.php';
+
 include("../Controlador/conexion.php");
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario = trim($_POST["Usuario"]);
     $nombre = trim($_POST["Nombre"]);
@@ -68,9 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->rowCount() > 0) {
         ?>
         <script>
-            var parametros = {
-                "mensaje": "error",
-            };
+            var parametros = { "mensaje": "error" };
             $.ajax({
                 data: parametros,
                 url: '../Controlador/error_regis_1.php',
@@ -94,27 +99,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->bindValue(":Correo", $correo);
         $stmt->bindValue(":Contrasena", $contrasena);
         $stmt->execute();
-        ?>
-        <script>
-            var parametros=
-            {
-                "mensaje":"error",
-            };
-            $.ajax({
-                data: parametros,
-                url:'../Controlador/error_regis_2.php',
-                type:'POST',
-                beforesend:function()
-                {
-                    $('#mostrar_mensaje_1').html("Mensaje antes de enviar");
-                },
-                success:function(mensaje)
-                {
-                    $('#mostrar_mensaje_1').html(mensaje);
-                }
-            });
-        </script>
-        <?php
+
+        // Si la inserción fue exitosa, enviar correo de verificación
+        $mail = new PHPMailer(true);
+
+        try {
+            // Configuración del servidor SMTP
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com'; // Cambiar según tu proveedor de correo
+            $mail->SMTPAuth = true;
+            $mail->Username = 'crackferna@gmail.com'; // Tu correo
+            $mail->Password = 'hshf djoq jnvs keuo'; // Tu contraseña de correo
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Configurar el correo
+            $mail->setFrom('tu_correo@gmail.com', 'Nombre de tu proyecto'); // Remitente
+            $mail->addAddress($correo, $nombre); // Destinatario
+            $mail->isHTML(true);
+            $mail->Subject = 'Verificación de cuenta';
+            
+            // Generar un token de verificación único
+            $token = bin2hex(random_bytes(16));
+            $urlVerificacion = "http://localhost/Sueldo/Controlador/verificar_cuenta.php?token=" . $token;
+
+            // Guardar el token en la base de datos (debes agregar un campo `token` en tu tabla `registro`)
+            $query = "UPDATE registro SET token = :token WHERE Correo = :Correo";
+            $stmt = $pdo->prepare($query);
+            $stmt->bindValue(":token", $token);
+            $stmt->bindValue(":Correo", $correo);
+            $stmt->execute();
+
+            // Contenido del correo
+            $mail->Body = "
+                <h1>Hola, $nombre</h1>
+                <p>Gracias por registrarte. Por favor, haz clic en el siguiente enlace para verificar tu cuenta:</p>
+                <a href='$urlVerificacion'>$urlVerificacion</a>
+                <p>Si no solicitaste esta verificación, por favor ignora este correo.</p>
+            ";
+
+            $mail->send();
+            ?>
+            <script>
+                alert("Usuario registrado correctamente. Por favor, verifica tu correo.");
+            </script>
+            <?php
+        } catch (Exception $e) {
+            ?>
+            <script>
+                alert("Error al enviar el correo de verificación: <?= $mail->ErrorInfo ?>");
+            </script>
+            <?php
+        }
     }
 }
 ?>

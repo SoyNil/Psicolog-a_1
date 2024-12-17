@@ -70,6 +70,17 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     echo $ocupacion_actual == 1 ? "Administrador" : ($ocupacion_actual == 2 ? "Psicólogo" : "Desconocido"); 
                 ?>
             </span>
+            <!-- BOTONES QUE DEBEN VERSE SOLO CON OCUPACIÓN 1 -->
+            <?php if ($ocupacion_actual == 1): ?>
+                <a href="registro.php">
+                    <button class="btn-register">Registrarse</button>
+                </a><br><br>
+                <button class="btn-view" id="verUsuariosBtn">Ver usuarios</button>
+            <?php endif; ?>
+            <!-- BOTÓN "VER PERFIL" SOLO PARA USUARIOS CON OCUPACIÓN 2 -->
+            <?php if ($ocupacion_actual == 2): ?>
+                <button class="btn-view" id="verPerfilBtn">Ver perfil</button>
+            <?php endif; ?>
             <a href="../Controlador/logout.php" class="logout-btn">Cerrar Sesión</a>
         </div>
     </header>
@@ -285,32 +296,279 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
+    <!-- Modal para listar usuarios -->
+    <div id="usuariosModal" class="modal-1">
+        <div class="modal-content-1">
+            <span class="close-btn-1">&times;</span>
+            <h2>Usuarios Registrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Usuario</th>
+                        <th>Correo</th>
+                        <th>Ocupación</th>
+                    </tr>
+                </thead>
+                <tbody id="usuariosTableBody">
+                    <!-- Aquí se llenarán los usuarios dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para editar/eliminar usuario -->
+    <div id="editarUsuarioModal" class="modal-1">
+        <div class="modal-content-1">
+            <span class="close-btn-1">&times;</span>
+            <h2>Editar Usuario</h2>
+            <form id="editarUsuarioForm">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" class="input-field">
+                
+                <label for="apellido">Apellido:</label>
+                <input type="text" id="apellido" name="apellido" class="input-field">
+
+                <label for="usuario">Usuario:</label>
+                <input type="text" id="usuario" name="usuario" class="input-field">
+
+                <label for="correo">Correo:</label>
+                <input type="email" id="correo" name="correo" class="input-field">
+
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" class="input-field">
+
+                <label for="ocupacion">Ocupación:</label>
+                <select id="ocupacion" name="ocupacion" class="input-field">
+                    <option value="1">Administrador</option>
+                    <option value="2">Psicólogo</option>
+                </select>
+
+                <input type="hidden" id="usuarioId" name="usuarioId">
+
+                <button type="button" id="modificarUsuario" class="primary-btn-1">Modificar</button>
+                <button type="button" id="eliminarUsuario" class="danger-btn-1">Eliminar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Perfil -->
+    <div id="modalPerfil" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2>Editar Perfil</h2>
+            <form id="editarPerfilForm" method="POST" action="../Controlador/editar_perfil.php">
+                <label for="Nombre">Nombre:</label>
+                <input type="text" id="Nombre" name="Nombre" value="<?php echo htmlspecialchars($usuario_actual); ?>" required><br>
+
+                <label for="Apellido">Apellido:</label>
+                <input type="text" id="Apellido" name="Apellido" value="<?php echo htmlspecialchars($apellido); ?>" required><br>
+
+                <label for="Usuario">Usuario:</label>
+                <input type="text" id="Usuario" name="Usuario" value="<?php echo htmlspecialchars($usuario_actual); ?>" required><br>
+
+                <label for="Correo">Correo:</label>
+                <input type="email" id="Correo" name="Correo" value="<?php echo htmlspecialchars($correo); ?>" required><br>
+
+                <label for="Contrasena">Contraseña:</label>
+                <input type="text" id="Contrasena" name="Contrasena"><br> <!-- Contraseña opcional -->
+
+                <button type="submit" class="update-btn">Actualizar</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Función para cargar los psicólogos y llenar el selector
-        function loadPsychologists() {
-            // Realizamos una solicitud para obtener la lista de psicólogos
-            fetch('../Controlador/obtener_usuarios.php')
+    document.addEventListener("DOMContentLoaded", function () {
+    // Variables globales
+    const modalPerfil = document.getElementById("modalPerfil");
+    const verPerfilBtn = document.getElementById("verPerfilBtn");
+    const closeModalBtn = document.getElementById("closeModal");
+    const usuariosModal = document.getElementById("usuariosModal");
+    const editarUsuarioModal = document.getElementById("editarUsuarioModal");
+    const usuariosTableBody = document.getElementById("usuariosTableBody");
+
+    // Obtener ocupación actual desde el servidor
+    const ocupacionActual = <?php echo json_encode($ocupacion_actual); ?>;
+
+    // Mostrar modal de perfil
+    if (verPerfilBtn) {
+        verPerfilBtn.addEventListener("click", function () {
+            const usuarioId = <?php echo $_SESSION['ID']; ?>; // Obtener el ID del usuario de la sesión
+            fetchUsuario(usuarioId, function (usuario) {
+                if (usuario.error) {
+                    alert(`Error: ${usuario.error}`);
+                } else {
+                    // Rellenar el modal con los datos del usuario
+                    document.getElementById("Nombre").value = usuario.Nombre;
+                    document.getElementById("Apellido").value = usuario.Apellido;
+                    document.getElementById("Usuario").value = usuario.Usuario;
+                    document.getElementById("Correo").value = usuario.Correo;
+                    document.getElementById("Contrasena").value = ""; // No mostrar contraseña
+                    modalPerfil.style.display = "block";
+                }
+            });
+        });
+    }
+
+    // Cerrar modal de perfil
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener("click", function () {
+            modalPerfil.style.display = "none";
+        });
+    }
+
+    // Cerrar modales al hacer clic fuera de ellos
+    window.addEventListener("click", function (event) {
+        if (event.target === modalPerfil || event.target === usuariosModal || event.target === editarUsuarioModal) {
+            event.target.style.display = "none";
+        }
+    });
+
+    // Función para cargar usuarios (solo si ocupación es administrador)
+    if (ocupacionActual === 1) {
+        const verUsuariosBtn = document.getElementById("verUsuariosBtn");
+        if (verUsuariosBtn) {
+            verUsuariosBtn.addEventListener("click", function () {
+                usuariosModal.style.display = "block";
+                cargarUsuarios();
+            });
+        }
+    } else {
+        console.log("El usuario no tiene permisos de administrador.");
+    }
+
+    // Función para cargar los datos de los usuarios
+    function cargarUsuarios() {
+        fetch("../Controlador/obtener_usuarios.php")
+            .then(response => response.json())
+            .then(data => {
+                if (usuariosTableBody) {
+                    usuariosTableBody.innerHTML = ""; // Limpiar tabla
+                    data.forEach(usuario => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td>${usuario.Nombre}</td>
+                            <td>${usuario.Apellido}</td>
+                            <td>${usuario.Usuario}</td>
+                            <td>${usuario.Correo}</td>
+                            <td>${usuario.Ocupacion === 1 ? "Administrador" : "Psicólogo"}</td>
+                        `;
+                        // Agregar evento para abrir modal de edición
+                        row.addEventListener("click", function () {
+                            abrirEditarModal(usuario);
+                        });
+                        usuariosTableBody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Error al cargar usuarios:", error);
+                alert("Error al cargar usuarios.");
+            });
+    }
+
+    // Función para abrir el modal de edición de usuario
+    function abrirEditarModal(usuario) {
+        editarUsuarioModal.style.display = "block";
+        document.getElementById("nombre").value = usuario.Nombre;
+        document.getElementById("apellido").value = usuario.Apellido;
+        document.getElementById("usuario").value = usuario.Usuario;
+        document.getElementById("correo").value = usuario.Correo;
+        document.getElementById("ocupacion").value = usuario.Ocupacion;
+        document.getElementById("usuarioId").value = usuario.ID;
+    }
+
+    // Función para modificar usuario
+    document.getElementById("modificarUsuario").addEventListener("click", function () {
+        const formData = new FormData(document.getElementById("editarUsuarioForm"));
+
+        fetch("../Controlador/modificar_usuario.php", {
+            method: "POST",
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Usuario modificado exitosamente.");
+                    location.reload();
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                console.error("Error al modificar usuario:", error);
+                alert("Error al modificar usuario.");
+            });
+    });
+
+    // Función para eliminar usuario
+    document.getElementById("eliminarUsuario").addEventListener("click", function () {
+        const usuarioId = document.getElementById("usuarioId").value;
+
+        if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+            const formData = new FormData();
+            formData.append("usuarioId", usuarioId);
+
+            fetch("../Controlador/eliminar_usuario.php", {
+                method: "POST",
+                body: formData,
+            })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.error) {
-                        console.error("Error al cargar los psicólogos:", data.error);
-                        return;
+                    if (data.status === "success") {
+                        alert("Usuario eliminado exitosamente.");
+                        location.reload();
+                    } else {
+                        alert(`Error: ${data.message}`);
                     }
-
-                    const psicologoSelector = document.getElementById('psicologoSelector'); // Selector donde se llenarán los psicólogos
-                    psicologoSelector.innerHTML = '<option value="">Seleccione un psicólogo</option>'; // Limpiar el selector antes de llenarlo
-
-                    // Llenar el selector con los psicólogos obtenidos
-                    data.forEach(psicologo => {
-                        const option = document.createElement('option');
-                        option.value = psicologo.ID; // ID del psicólogo
-                        option.textContent = psicologo.Usuario; // Nombre del psicólogo
-                        psicologoSelector.appendChild(option);
-                    });
                 })
                 .catch(error => {
-                    console.error("Error al obtener los psicólogos:", error);
+                    console.error("Error al eliminar usuario:", error);
+                    alert("Error al eliminar usuario.");
                 });
+        }
+    });
+
+    // Función para obtener datos de un usuario
+    function fetchUsuario(id, callback) {
+        fetch(`../Controlador/obtener_usuarios.php?id=${id}`)
+            .then(response => response.json())
+            .then(callback)
+            .catch(error => {
+                console.error("Error al obtener datos del usuario:", error);
+                callback({ error: "No se pudo obtener los datos del usuario." });
+            });
+    }
+    // Cerrar modales por el botón de cerrar en cualquier modal
+    document.querySelectorAll('.close-btn-1').forEach(closeBtn => {
+        closeBtn.addEventListener('click', function () {
+            closeBtn.closest('.modal-1').style.display = 'none';
+        });
+    });
+});
+
+        // Función para cargar los psicólogos y llenar el selector
+        function loadPsychologists() {
+            // Solo ejecutamos esta función si el selector existe
+            const psicologoSelector = document.getElementById('psicologoSelector');
+            if (psicologoSelector) {
+                fetch('../Controlador/obtener_usuarios.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        psicologoSelector.innerHTML = '<option value="">Seleccione un psicólogo</option>'; // Limpiar el selector
+                        data.forEach(psicologo => {
+                            const option = document.createElement('option');
+                            option.value = psicologo.ID;
+                            option.textContent = psicologo.Usuario;
+                            psicologoSelector.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error("Error al obtener los psicólogos:", error));
+            } else {
+                console.warn("El selector de psicólogos no está disponible en esta página.");
+            }
         }
 
         // Inicializamos la variable de pacientes de forma global
@@ -923,7 +1181,6 @@ function renderDonutChart(pacientes) {
                 }
             });
         }
-
     </script>
     <script></script>
 </body>

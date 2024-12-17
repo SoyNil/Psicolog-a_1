@@ -4,6 +4,9 @@ include("../Controlador/conexion.php");
 
 header('Content-Type: application/json');
 
+// Establecer la zona horaria a "America/Lima" (Perú)
+date_default_timezone_set('America/Lima');
+
 // Verifica si el usuario está autenticado
 if (!isset($_SESSION['Usuario'])) {
     echo json_encode(['success' => false, 'error' => 'Usuario no autenticado.']);
@@ -20,7 +23,7 @@ if (!isset($data['notice']) || trim($data['notice']) === '') {
 
 $notice = trim($data['notice']);
 $usuario_id = $_SESSION['ID']; // ID del usuario autenticado
-$fecha = date("Y-m-d H:i:s");
+$fecha = date("Y-m-d H:i:s"); // Fecha y hora actual según la zona horaria de Perú
 
 // Inserta el aviso en la base de datos
 $query = "INSERT INTO avisos (Usuario_ID, aviso, fecha) VALUES (:usuario_id, :aviso, :fecha)";

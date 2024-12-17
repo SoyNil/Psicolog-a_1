@@ -121,15 +121,17 @@ body::after{
 .form-conte .input-control:focus{
     outline: none;
 }
-.form-conte .btn{
-    height: 30px;
+
+/* Estilo del botón */
+.form-conte .btn {
+    height: 45px; /* Aumentar altura para hacerlo más visible */
     width: 100%;
-    font-size: 16px;
-    font-weight: 500;
-    text-transform: capitalize;
+    font-size: 18px; /* Ajustado para hacerlo más legible */
+    font-weight: 600; /* Aumentar el peso de la fuente para darle más impacto */
+    text-transform: uppercase; /* Hacer el texto en mayúsculas para mayor énfasis */
     font-family: 'Rajdhani', sans-serif;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 25px; /* Bordes más redondeados para un aspecto más suave */
     user-select: none;
     background: linear-gradient(to right, var(--green), var(--lead));
     border: none;
@@ -137,19 +139,32 @@ body::after{
     position: relative;
     z-index: 1;
     overflow: hidden;
+    transition: all 0.3s ease-in-out; /* Transición suave para todos los cambios */
 }
-.form-conte .btn::before{
+
+/* Efecto de hover */
+.form-conte .btn:hover {
+    background: linear-gradient(to right, var(--violet), var(--blue)); /* Cambio de color en hover */
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2); /* Agregar sombra al pasar el mouse */
+    transform: translateY(-3px); /* Leve impulso hacia arriba */
+}
+
+/* Efecto previo al hover (efecto de fondo animado) */
+.form-conte .btn::before {
     content: '';
     position: absolute;
     left: 0;
     top: 0;
     height: 100%;
     width: 100%;
+    background-color: var(--button-hover-color);
     transition: background-color 0.5s ease;
     z-index: -1;
 }
-.form-conte .btn:hover::before{
-    background-color: var(--button-hover-color);
+
+/* Cambio de color cuando se pasa el ratón */
+.form-conte .btn:hover::before {
+    background-color: var(--violet); /* Fondo violeta para el hover */
 }
 .form-conte p{
     text-align: center;
@@ -173,6 +188,11 @@ body::after{
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.logout-btn:hover {
+    background-color: var(--violet); /* Cambia el color al pasar el ratón */
+    transform: scale(1.05); /* Efecto de aumento en el tamaño */
 }
 
 .main-container {
@@ -805,4 +825,211 @@ canvas {
 /* Contenedor principal de filtros de fecha */
 #dateFiltersSection {
     margin-bottom: 30px; /* Espacio entre filtros de fecha y los botones de agregar */
+}
+
+.modal-1 {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content-1 {
+    background-color: var(--glass-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 800px;
+    width: 90%;;
+    margin: auto;
+    position: relative;
+    color: var(--text-white);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-family: 'Alkatra', cursive;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--text-white);
+}
+
+/* Botón de cerrar */
+.close-btn-1 {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 30px;
+    color: var(--text-white);
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: left;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: var(--body-bg-color);
+    color: var(--text-white);
+    font-weight: 500;
+}
+
+/* Estilo por defecto para las filas */
+tr {
+    background-color: var(--glass-bg-color);
+}
+
+/* Cambiar color de toda la fila al pasar el mouse */
+tr:hover {
+    background-color: var(--body-bg-color);
+}
+
+/* Asegurarse de que el texto dentro de las celdas no cambie de color */
+tr:hover td {
+    color: var(--text-white);
+}
+
+.modal-content-1 input,
+.modal-content-1 select,
+.modal-content-1 button {
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    color: var(--text-dark-gray);
+    background-color: var(--input-bg-color);
+}
+
+.primary-btn-1 {
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.primary-btn-1:hover {
+    background-color: var(--border-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.danger-btn-1 {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.danger-btn-1:hover {
+    background-color: var(--border-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.update-btn {
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.update-btn:hover {
+    background-color: var(--green);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+/* Estilo para el select */
+#ocupacion {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-light-gray);
+    background-color: var(--glass-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    outline: none;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Efecto hover y focus */
+#ocupacion:hover,
+#ocupacion:focus {
+    background-color: var(--body-bg-color);
+    border-color: var(--violet);
+    color: var(--text-white);
+    cursor: pointer;
+}
+
+/* Estilo para el botón "Registrarse" */
+.btn-register {
+    background-color: var(--blue); /* Azul llamativo */
+    color: var(--text-white); /* Texto blanco */
+    border: none;
+    padding: 12px 25px; /* Mayor tamaño */
+    border-radius: 5px;
+    font-size: 16px; /* Ajustado para hacerlo más legible */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none; /* Elimina el subrayado del enlace */
+}
+
+.btn-register:hover {
+    background-color: var(--violet); /* Cambia el color al pasar el ratón */
+    transform: scale(1.05); /* Efecto de aumento en el tamaño */
+}
+
+/* Estilo para el botón "Ver usuarios" */
+.btn-view {
+    background-color: var(--green); /* Verde llamativo */
+    color: var(--text-white); /* Texto blanco */
+    border: none;
+    padding: 12px 25px; /* Mayor tamaño */
+    border-radius: 5px;
+    font-size: 16px; /* Ajustado para hacerlo más legible */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-view:hover {
+    background-color: var(--violet); /* Cambia el color al pasar el ratón */
+    transform: scale(1.05); /* Efecto de aumento en el tamaño */
 }

@@ -39,8 +39,6 @@
                     </div>
                 </div>
                     <input class="btn" type="submit" value="Iniciar Sesion"><br><br>
-                    <p><label>¿No tienes una cuenta? Cree una aquí</label></p>
-                    <a href="registro.php"><input class="btn" type="button" value="Registrarse"></a><br><br>   
                 </form><div id="mostrar_mensaje"></div>
             </div>
         </div>
