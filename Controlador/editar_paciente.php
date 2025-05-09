@@ -54,32 +54,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Paciente</title>
-    <link rel="stylesheet" href="estilos.css">
-</head>
-<body>
-    <h2>Editar Paciente</h2>
-    <form action="" method="post" class="form">
-        <label for="dni">DNI:</label>
-        <input type="text" name="dni" id="dni" value="<?php echo htmlspecialchars($paciente['DNI']); ?>" required>
-
-        <label for="nombre">Nombre:</label>
-        <input type="text" name="nombre" id="nombre" value="<?php echo htmlspecialchars($paciente['Nombre']); ?>" required>
-
-        <label for="fecha">Fecha:</label>
-        <input type="date" name="fecha" id="fecha" value="<?php echo htmlspecialchars($paciente['Fecha']); ?>" required>
-
-        <label for="precio">Precio:</label>
-        <input type="number" name="precio" id="precio" step="0.01" value="<?php echo htmlspecialchars($paciente['Precio']); ?>" required>
-
-        <button type="submit" class="submit-btn">Guardar Cambios</button>
-    </form>
-</body>
-</html>

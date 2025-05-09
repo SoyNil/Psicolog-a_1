@@ -55,6 +55,7 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../Modelo/estilos.css">
     <link rel="stylesheet" href="../Modelo/estilosEditarModal.css">
     <link rel="stylesheet" href="../Modelo/estilosAvisos.css">
+    <link rel="stylesheet" href="../Modelo/estilosBtnChat.css">
     <!-- Añadir jQuery desde CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -184,6 +185,14 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <input type="date" id="endDate">
             <button onclick="applyCustomDateFilter()" class="filter-btn">Filtrar</button>
         </div>
+    </div>
+    <!-- Botón para abrir el chat -->
+    <button id="chatgpt-btn" class="chatgpt-button">💬 IllaBot</button>
+
+    <!-- Contenedor del chat -->
+    <div id="chatgpt-container" class="chatgpt-container">
+        <button id="close-chat" class="close-btn">✖</button>
+        <div id="chat-content"></div>
     </div>
 
     <!-- Contenedor del botón y avisos -->
@@ -424,6 +433,90 @@ $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (event.target === modalPerfil || event.target === usuariosModal || event.target === editarUsuarioModal) {
             event.target.style.display = "none";
         }
+    });
+
+    // ChatBot JavaScript
+    let chatLoaded = false;
+    let chatBtn = document.getElementById("chatgpt-btn");
+    let chatBox = document.getElementById("chatgpt-container");
+    let closeChat = document.getElementById("close-chat");
+
+    chatBtn.addEventListener("click", function () {
+        if (chatBox.style.display === "none" || chatBox.style.display === "") {
+            chatBox.style.display = "flex";
+            chatBox.style.animation = "abrirChat 0.3s ease-out"; // Agrega la animación de apertura
+            chatBtn.style.animation = "cerrarChat 0.3s ease-out"; 
+            setTimeout(() => {
+                chatBtn.style.display = "none"; // Oculta el botón después de la animación
+            }, 300);
+
+            if (!chatLoaded) {
+                fetch("chatbot.php")
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById("chat-content").innerHTML = data;
+                        chatLoaded = true;
+
+                        // 📌 Volver a cargar el script del chatbot
+                        let script = document.createElement("script");
+                        script.textContent = `
+                            function enviarMensaje() {
+                                var mensaje = document.getElementById("mensaje").value.trim();
+                                if (mensaje === "") {
+                                    alert("No puedes enviar un mensaje vacío.");
+                                    return;
+                                }
+
+                                var chatBody = document.getElementById("chat");
+
+                                // 📌 Agregar el mensaje del usuario con la misma estructura de burbuja
+                                let userMessage = document.createElement("div");
+                                userMessage.classList.add("mensaje", "usuario");
+                                userMessage.innerHTML = "<strong>Tú:</strong> " + mensaje;
+                                chatBody.appendChild(userMessage);
+
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", "chatbot.php", true);
+                                xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                                xhr.onreadystatechange = function () {
+                                    if (xhr.readyState == 4) {
+                                        let botMessage = document.createElement("div");
+                                        botMessage.classList.add("mensaje", "bot");
+
+                                        if (xhr.status == 200) {
+                                            botMessage.innerHTML = "<strong>Bot:</strong> " + xhr.responseText;
+                                        } else {
+                                            botMessage.innerHTML = "<strong>Bot:</strong> Error en la respuesta.";
+                                        }
+
+                                        chatBody.appendChild(botMessage);
+
+                                        // 📌 Hacer scroll automático hacia el último mensaje
+                                        chatBody.scrollTop = chatBody.scrollHeight;
+                                        document.getElementById("mensaje").value = "";
+                                    }
+                                };
+                                xhr.send("mensaje=" + encodeURIComponent(mensaje));
+                            }
+                        `;
+                        document.body.appendChild(script);
+                    })
+                    .catch(error => console.error("Error al cargar el chatbot:", error));
+            }
+        } else {
+            chatBox.style.display = "none";
+            chatBtn.style.display = "block"; // Mostrar el botón cuando se cierra el chat
+        }
+    });
+
+    // Cerrar chat
+    closeChat.addEventListener("click", function () {
+        chatBox.style.animation = "cerrarChat 0.3s ease-in"; // Aplica animación de cierre
+        setTimeout(() => {
+            chatBox.style.display = "none"; // Oculta el chat después de la animación
+            chatBtn.style.display = "block";
+            chatBtn.style.animation = "abrirChat 0.3s ease-out"; // Animación de aparición del botón
+        }, 300);
     });
 
     // Función para cargar usuarios (solo si ocupación es administrador)
@@ -1182,6 +1275,5 @@ function renderDonutChart(pacientes) {
             });
         }
     </script>
-    <script></script>
 </body>
 </html>
